@@ -11,17 +11,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import subprocess
 
-from setuptools import setup
+expectations = {
+    'encode': {
+        'input': 'test',
+        'output': 'dGVzdA==\n'
+    },
+    'decode': {
+        'input': 'dGVzdA==',
+        'output': 'test\n'
+    }
+}
 
-setup(
-    name='pyb64',
-    version='0.1',
-    py_modules=['pyb64'],
-    install_requires=['Click', 'pytest-runner'],
-    tests_require=['pytest'],
-    entry_points='''
-        [console_scripts]
-        pyb64=pyb64:pyb64
-    ''',
-)
+
+def test_encode():
+    result = subprocess.check_output(['pyb64', 'encode', expectations['encode']['input']])
+    assert result == expectations['encode']['output']
+
+
+def test_decode():
+    result = subprocess.check_output(['pyb64', 'decode', expectations['decode']['input']])
+    assert result == expectations['decode']['output']
